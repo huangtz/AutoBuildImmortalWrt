@@ -28,6 +28,27 @@ if [ -f "$IP_VALUE_FILE" ]; then
     echo "custom router ip is $CUSTOM_IP" >> $LOGFILE
 fi
 
+# 检查 WIFI 配置文件是否存在
+WIFI_SETTINGS_FILE="/etc/config/wifi-settings"
+if [ -f "$WIFI_SETTINGS_FILE" ]; then
+    . "$WIFI_SETTINGS_FILE"
+    echo "print wlan_name value=== $wlan_name" >> $LOGFILE
+    # 判断是否配置了 WIFI 信息
+    if [ -n "$wlan_name" ] && [ -n "$wlan_password" ] && [ ${#wlan_password} -ge 8 ]; then
+        echo "WIFI configuration started at $(date)" >> $LOGFILE
+        uci set wireless.@wifi-device[0].disabled='0'
+        uci set wireless.@wifi-iface[0].disabled='0'
+        uci set wireless.@wifi-iface[0].encryption='psk2'
+        uci set wireless.@wifi-iface[0].ssid="$wlan_name"
+        uci set wireless.@wifi-iface[0].key="$wlan_password"
+        uci commit wireless
+        echo "WIFI configuration completed successfully." >> $LOGFILE
+    else
+        echo "WIFI configuration parameters invalid. Skipping." >> $LOGFILE
+    fi
+else
+    echo "WIFI settings file not found. Skipping." >> $LOGFILE
+fi
 
 # 判断是否启用 PPPoE
 echo "print enable_pppoe value=== $enable_pppoe" >> $LOGFILE
