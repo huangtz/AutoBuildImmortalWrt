@@ -47,6 +47,7 @@ echo "Create wifi-settings"
 cat << EOF > /home/build/immortalwrt/files/etc/config/wifi-settings
 wlan_name=${WLAN_NAME}
 wlan_password=${WLAN_PASSWORD}
+root_password=${ROOT_PASSWORD}
 EOF
 
 echo "cat wifi-settings"
