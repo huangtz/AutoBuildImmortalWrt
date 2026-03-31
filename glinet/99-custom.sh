@@ -36,11 +36,19 @@ if [ -f "$WIFI_SETTINGS_FILE" ]; then
     # 判断是否配置了 WIFI 信息
     if [ -n "$wlan_name" ] && [ -n "$wlan_password" ] && [ ${#wlan_password} -ge 8 ]; then
         echo "WIFI configuration started at $(date)" >> $LOGFILE
+        # 配置2.4G WiFi
         uci set wireless.@wifi-device[0].disabled='0'
         uci set wireless.@wifi-iface[0].disabled='0'
         uci set wireless.@wifi-iface[0].encryption='psk2'
         uci set wireless.@wifi-iface[0].ssid="$wlan_name"
         uci set wireless.@wifi-iface[0].key="$wlan_password"
+
+        # 配置5G WiFi
+        uci set wireless.@wifi-device[1].disabled='0'
+        uci set wireless.@wifi-iface[1].disabled='0'
+        uci set wireless.@wifi-iface[1].ssid="${wlan_name}_5G"
+        uci set wireless.@wifi-iface[1].encryption='psk2'
+        uci set wireless.@wifi-iface[1].key="$wlan_password"
         uci commit wireless
         echo "WIFI configuration completed successfully." >> $LOGFILE
     else
@@ -48,6 +56,10 @@ if [ -f "$WIFI_SETTINGS_FILE" ]; then
     fi
 else
     echo "WIFI settings file not found. Skipping." >> $LOGFILE
+fi
+
+if [ -n "$root_password" ]; then
+  (echo "$root_password"; sleep 1; echo "$root_password") | passwd > /dev/null
 fi
 
 # 判断是否启用 PPPoE
