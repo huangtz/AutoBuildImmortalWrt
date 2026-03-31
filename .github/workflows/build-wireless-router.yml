@@ -484,7 +484,7 @@ on:
           - netgear_r8000
           - smartrg_sr400ac
           - tenda_ac9
-        default: glinet_gl-mt6000
+        default: cmcc_rax3000m
       custom_router_ip:
         description: "请设置路由器的管理地址 格式:192.168.x.1 或 10.x.x.1"
         required: true
@@ -516,6 +516,12 @@ on:
         required: false
       pppoe_password:
         description: "宽带密码 (若启用PPPoE)"
+        required: false
+      wlan_name:
+        description: "WIFI名称"
+        required: false
+      wlan_password:
+        description: "WIFI密码"
         required: false
 
 
@@ -647,6 +653,8 @@ jobs:
               -e ENABLE_PPPOE=${{ inputs.enable_pppoe }} \
               -e PPPOE_ACCOUNT=${{ inputs.pppoe_account }} \
               -e PPPOE_PASSWORD=${{ inputs.pppoe_password }} \
+              -e WLAN_NAME=${{ inputs.wlan_name }} \
+              -e WLAN_PASSWORD=${{ inputs.wlan_password }} \
             immortalwrt/imagebuilder:$tag /bin/bash /home/build/immortalwrt/build.sh
           
 
