@@ -41,6 +41,17 @@ EOF
 echo "cat pppoe-settings"
 cat /home/build/immortalwrt/files/etc/config/pppoe-settings
 
+# 创建wifi配置文件 yml传入wifi变量————>wifi-settings文件
+echo "Create wifi-settings"
+
+cat << EOF > /home/build/immortalwrt/files/etc/config/wifi-settings
+wlan_name=${WLAN_NAME}
+wlan_password=${WLAN_PASSWORD}
+EOF
+
+echo "cat wifi-settings"
+cat /home/build/immortalwrt/files/etc/config/wifi-settings
+
 # 输出调试信息
 echo "$(date '+%Y-%m-%d %H:%M:%S') - Starting build process..."
 
